@@ -1,4 +1,4 @@
-name: 打包发布
+﻿name: 打包发布
 
 on:
   push:
@@ -50,14 +50,18 @@ jobs:
       - name: 复制安装脚本和文档
         shell: bash
         run: |
-          # 安装脚本
+          # 安装脚本（从源码目录复制到打包目录）
           if [ "${{ runner.os }}" = "Windows" ]; then
-            cp dist/hanui/安装文件关联.bat dist/hanui/ 2>/dev/null || true
+            cp "scripts/安装文件关联.bat" "dist/hanui/"
           else
-            cp scripts/install-association.sh dist/hanui/ 2>/dev/null || true
+            cp "scripts/install-association.sh" "dist/hanui/"
+            chmod +x "dist/hanui/install-association.sh"
           fi
           # 使用说明
-          cp docs/使用说明.md dist/hanui/ 2>/dev/null || true
+          cp "docs/使用说明.md" "dist/hanui/"
+          # 验证
+          echo "dist/hanui 目录内容:"
+          ls -la "dist/hanui/"
 
       - name: 打 zip
         shell: bash

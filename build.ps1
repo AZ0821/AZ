@@ -27,15 +27,11 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# 3. 生成文件关联安装脚本
-Write-Host "`n[3/5] 生成文件关联安装脚本..." -ForegroundColor Yellow
-# .bat 已随项目分发，复制到 dist
-Copy-Item "dist\hanui\安装文件关联.bat" -Destination "dist\hanui\" -ErrorAction SilentlyContinue
-if (-not (Test-Path "dist\hanui\安装文件关联.bat")) {
-    # 如果不存在则从项目根目录找
-    Copy-Item "安装文件关联.bat" -Destination "dist\hanui\" -ErrorAction SilentlyContinue
-}
-Write-Host "  已生成" -ForegroundColor Green
+# 3. 复制安装脚本和文档
+Write-Host "`n[3/5] 复制安装脚本和文档..." -ForegroundColor Yellow
+Copy-Item "scripts\安装文件关联.bat" -Destination "dist\hanui\"
+Copy-Item "docs\使用说明.md" -Destination "dist\hanui\" -ErrorAction SilentlyContinue
+Write-Host "  已复制" -ForegroundColor Green
 
 # 4. 打 zip + 生成 SHA256
 Write-Host "`n[4/5] 打包 zip + SHA256..." -ForegroundColor Yellow

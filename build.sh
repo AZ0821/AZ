@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 # 汉UI 打包脚本（macOS / Linux）
 # 用法：  bash build.sh
 set -euo pipefail
@@ -31,6 +31,7 @@ python -m PyInstaller hanui.spec --noconfirm
 # 4. 安装脚本 + 文档
 echo -e "\n[4/5] 复制安装脚本和文档..."
 cp scripts/install-association.sh dist/hanui/
+cp "scripts/安装文件关联.bat" dist/hanui/ 2>/dev/null || true
 cp docs/使用说明.md dist/hanui/ 2>/dev/null || true
 chmod +x dist/hanui/install-association.sh
 
