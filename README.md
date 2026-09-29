@@ -301,8 +301,8 @@ bash build.sh
 推送 * 标签后，GitHub Actions 自动打包 Windows / macOS / Linux：
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git tag v0.1.2
+git push origin v0.1.2
 ```
 
 也可在 Actions 页面手动触发（workflow_dispatch）。
@@ -310,9 +310,9 @@ git push origin v0.1.0
 产物：
 | 平台 | 文件名 |
 |------|--------|
-| Windows | hanui-v0.1.0-win64.zip |
-| macOS (Apple Silicon) | hanui-v0.1.0-macos-arm64.zip |
-| Linux x64 | hanui-v0.1.0-linux-x64.zip |
+| Windows | hanui-v0.1.2-win64.zip |
+| macOS (Apple Silicon) | hanui-v0.1.2-macos-arm64.zip |
+| Linux x64 | hanui-v0.1.2-linux-x64.zip |
 
 Release 页面附带 .sha256 校验文件。
 
