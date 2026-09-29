@@ -4,7 +4,7 @@
 set -euo pipefail
 
 cd "$(dirname "$0")"
-VERSION="v0.1.0"
+VERSION="v0.1.2"
 PLATFORM="$(uname -s | tr '[:upper:]' '[:lower:]')-$(uname -m)"
 if [ "$PLATFORM" = "darwin-arm64" ]; then PLATFORM="macos-arm64"; fi
 if [ "$PLATFORM" = "darwin-x86_64" ]; then PLATFORM="macos-x64"; fi

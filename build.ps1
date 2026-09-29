@@ -35,7 +35,7 @@ Write-Host "  已复制" -ForegroundColor Green
 
 # 4. 打 zip + 生成 SHA256
 Write-Host "`n[4/5] 打包 zip + SHA256..." -ForegroundColor Yellow
-$version = "v0.1.0"
+$version = "v0.1.2"
 $zipName = "hanui-$version-win64.zip"
 $zipPath = "dist\$zipName"
 Compress-Archive -Path "dist\hanui" -DestinationPath $zipPath -Force
