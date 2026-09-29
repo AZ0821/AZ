@@ -1,0 +1,29 @@
+[project]
+name = "hanui"
+version = "0.1.0"
+description = "汉UI —— 中文命令驱动的开源 RPA 桌面工具（对标 TagUI）"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "HanUI Contributors" }]
+keywords = ["rpa", "automation", "chinese", "playwright", "tagui"]
+dependencies = [
+    "playwright>=1.40",
+    "PySide6>=6.6",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4", "pytest-asyncio>=0.23"]
+
+[project.scripts]
+hanui = "hanui.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["hanui*"]
+
+[tool.pytest.ini_options]
+python_files = ["test_*.py"]

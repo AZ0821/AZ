@@ -1,0 +1,12 @@
+# 汉UI 示例：打开网页并搜索
+# 运行：hanui run examples/百度搜索.hrpa --show
+
+打开 https://www.baidu.com
+等待 1 秒
+输入 "#kw" 为 "汉UI 自动化"
+点击 "#su"
+等待 2 秒
+读取 "#content_left" 到 结果
+打印 结果
+截图 "搜索结果.png"
+断言 页面包含 汉UI

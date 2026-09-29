@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+*.egg
+.eggs/
+.pytest_cache/
+
+# 构建产物
+dist/
+build/
+*.spec.bak
+
+# 临时文件
+err.txt
+out.txt
+
+# IDE
+.idea/
+.vscode/
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 浏览器下载（本地测试）
+ms-playwright/

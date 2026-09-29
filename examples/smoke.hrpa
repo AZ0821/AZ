@@ -1,0 +1,6 @@
+﻿打开 https://example.com
+等待 1 秒
+断言 标题包含 Example
+读取 "h1" 到 标题
+打印 标题
+截图 "example.png"

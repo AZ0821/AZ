@@ -1,0 +1,6 @@
+# 汉UI 示例：表单填写与断言
+打开 https://example.com
+等待 1 秒
+断言 标题包含 Example
+打印 页面标题读取完成
+截图 "example.png"

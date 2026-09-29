@@ -1,0 +1,122 @@
+name: 打包发布
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform: win64
+            python-version: "3.12"
+          - os: macos-latest
+            platform: macos-arm64
+            python-version: "3.12"
+          - os: ubuntu-latest
+            platform: linux-x64
+            python-version: "3.12"
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+          pip install pyinstaller
+
+      - name: 运行测试
+        run: python -m pytest tests/ -q --ignore=tests/test_recorder_integration.py
+
+      - name: 打包
+        run: python -m PyInstaller hanui.spec --noconfirm
+
+      - name: 复制安装脚本和文档
+        shell: bash
+        run: |
+          # 安装脚本
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            cp dist/hanui/安装文件关联.bat dist/hanui/ 2>/dev/null || true
+          else
+            cp scripts/install-association.sh dist/hanui/ 2>/dev/null || true
+          fi
+          # 使用说明
+          cp docs/使用说明.md dist/hanui/ 2>/dev/null || true
+
+      - name: 打 zip
+        shell: bash
+        run: |
+          cd dist
+          VERSION="${GITHUB_REF_NAME:-dev}"
+          ZIPNAME="hanui-${VERSION}-${{ matrix.platform }}.zip"
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            7z a "$ZIPNAME" hanui/
+          else
+            zip -r "$ZIPNAME" hanui/
+          fi
+          # SHA256
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            HASH=$(certutil -hashfile "$ZIPNAME" SHA256 | sed -n '2p' | tr -d ' \r')
+          else
+            HASH=$(shasum -a 256 "$ZIPNAME" | awk '{print $1}')
+          fi
+          echo "$HASH  $ZIPNAME" > "$ZIPNAME.sha256"
+          echo "zip=$ZIPNAME" >> "$GITHUB_ENV"
+          echo "hash=$HASH" >> "$GITHUB_ENV"
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: hanui-${{ matrix.platform }}
+          path: |
+            dist/${{ env.zip }}
+            dist/${{ env.zip }}.sha256
+          retention-days: 30
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: 下载所有产物
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: 创建 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*
+          generate_release_notes: true
+          body: |
+            ## 校验方法
+
+            **Windows (PowerShell):**
+            ```
+            Get-FileHash hanui-xxx-win64.zip -Algorithm SHA256
+            ```
+
+            **macOS / Linux:**
+            ```
+            shasum -a 256 hanui-xxx-macos-arm64.zip
+            sha256sum hanui-xxx-linux-x64.zip
+            ```
+
+            对比 `.sha256` 文件中的哈希值即可。
